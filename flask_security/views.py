@@ -197,7 +197,7 @@ def login():
         )
 
 
-def logout_without_form():
+def logout():
     """View function which handles a logout request."""
     tf_clean_session()
 
@@ -209,27 +209,6 @@ def logout_without_form():
         return _security._render_json({}, 200, headers=None, user=None)
 
     return redirect(get_post_logout_redirect())
-
-
-def logout_with_form():
-    """View function which handles a logout with a form."""
-    form = _security.logout_form(request.form)
-
-    if form.validate_on_submit():
-        response = logout_without_form()
-        return response
-
-    return _security.render_template(
-        config_value("LOGOUT_USER_TEMPLATE"), logout_user_form=form, **_ctx("logout")
-    )
-
-
-def logout():
-    """View function which handles a logout request."""
-    if _security.logout_form:
-        return logout_with_form()
-
-    return logout_without_form()
 
 
 @anonymous_user_required
